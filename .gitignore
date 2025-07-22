@@ -1,0 +1,10 @@
+.terraform/*
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfplan
+*.tfignore
+*.terraform-version
+*.terraformrc
+*.terraform.tfstate
+*.terraform.tfstate.backup
