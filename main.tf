@@ -12,6 +12,7 @@ variable "subnet_cidr_blocks" {
   type        = string 
   
 }
+
 variable "avail_zone" {
   description = "Availability Zone for the subnet"
   type        = string 
@@ -96,21 +97,22 @@ data "aws_ami" "myapp_ami" {
     name   = "virtualization-type"
     values = ["hvm"]
   }
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]     
-  
-} 
+
 }
 
 resource "aws_instance" "myapp_instance" {
   ami           = data.aws_ami.myapp_ami.id # Replace with a valid AMI ID for your region
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.myapp_subnet.id
+  availability_zone = var.avail_zone
+  key_name      = "terraform-project" # Use the key pair available in your AWS account
   vpc_security_group_ids = [aws_security_group.myapp_sg.id]
+  associate_public_ip_address = true # Enable if you want a public IP
+  user_data = file("docker-nginx-installation.sh") # Path to your user data script
     tags = {
         Name = "${var.env_prefix}-instance"
     }
+    
 }
 output "vpc_id" {    
   value = aws_vpc.myapp_vpc.id    # Output the VPC ID  
@@ -124,7 +126,7 @@ output "instance_id" {
 output "myapp_ami_id" {
   value = data.aws_ami.myapp_ami.id # Output the AMI ID
 }      
-output "instance_public_ip" {
-  value =  aws_instance.myapp_instance.public_ip # Output the Instance Public IP
+output "myapp_instance_private_public_ip" {
+  value =  [aws_instance.myapp_instance.private_ip,aws_instance.myapp_instance.public_ip] # Output the Instance Public IP
 }    
 
