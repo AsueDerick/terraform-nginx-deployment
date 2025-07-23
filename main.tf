@@ -69,6 +69,13 @@ resource "aws_security_group" "myapp_sg" {
         protocol    = "tcp"
         cidr_blocks =["0.0.0.0/0"] # Allow HTTP from anywhere consider restricting this in production
     }
+
+    ingress {
+        from_port   = 80
+        to_port     = 80
+        protocol    = "tcp"
+        cidr_blocks =["0.0.0.0/0"] # Allow HTTP from anywhere consider restricting this in production
+    }
     ingress {
         from_port   = 22
         to_port     = 22
@@ -114,6 +121,7 @@ resource "aws_instance" "myapp_instance" {
     }
     
 }
+
 output "vpc_id" {    
   value = aws_vpc.myapp_vpc.id    # Output the VPC ID  
 }
@@ -129,4 +137,5 @@ output "myapp_ami_id" {
 output "myapp_instance_private_public_ip" {
   value =  [aws_instance.myapp_instance.private_ip,aws_instance.myapp_instance.public_ip] # Output the Instance Public IP
 }    
+
 
