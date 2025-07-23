@@ -64,8 +64,8 @@ resource "aws_route_table_association" "myapp_route_table_association" {
 resource "aws_security_group" "myapp_sg" {
   vpc_id = aws_vpc.myapp_vpc.id
     ingress {
-        from_port   = 80
-        to_port     = 80
+        from_port   = 8080
+        to_port     = 8080
         protocol    = "tcp"
         cidr_blocks =["0.0.0.0/0"] # Allow HTTP from anywhere consider restricting this in production
     }
